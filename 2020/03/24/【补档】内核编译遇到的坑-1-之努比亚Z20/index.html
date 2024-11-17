@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="注意： 该内容为补档，由于日期设置原因将会导致排序在下面 距离上次编译内核应该是安卓4.0时代了，最近因为一些特殊的需求，于是重新拾起了“内核编译”这档子事，这次的对象是    牛逼亚 努比亚Z20">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【补档】内核编译遇到的坑(1)之努比亚Z20">
+<meta property="og:url" content="http://example.com/2020/03/24/%E3%80%90%E8%A1%A5%E6%A1%A3%E3%80%91%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91-1-%E4%B9%8B%E5%8A%AA%E6%AF%94%E4%BA%9AZ20/index.html">
+<meta property="og:site_name" content="全连击の碎碎念">
+<meta property="og:description" content="注意： 该内容为补档，由于日期设置原因将会导致排序在下面 距离上次编译内核应该是安卓4.0时代了，最近因为一些特殊的需求，于是重新拾起了“内核编译”这档子事，这次的对象是    牛逼亚 努比亚Z20">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8qDI4s.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8LkgDH.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8q5KRU.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8qLaKf.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8qXdAg.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8LpUH0.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8LiMrj.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/03/24/8LFky4.jpg">
+<meta property="article:published_time" content="2020-03-24T06:44:34.000Z">
+<meta property="article:modified_time" content="2024-11-17T11:53:07.196Z">
+<meta property="article:author" content="FullCombos">
+<meta property="article:tag" content="内核">
+<meta property="article:tag" content="编译">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/03/24/8qDI4s.png">
+
+<link rel="canonical" href="http://example.com/2020/03/24/%E3%80%90%E8%A1%A5%E6%A1%A3%E3%80%91%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91-1-%E4%B9%8B%E5%8A%AA%E6%AF%94%E4%BA%9AZ20/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>【补档】内核编译遇到的坑(1)之努比亚Z20 | 全连击の碎碎念</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">全连击の碎碎念</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">beep-beep</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/03/24/%E3%80%90%E8%A1%A5%E6%A1%A3%E3%80%91%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91-1-%E4%B9%8B%E5%8A%AA%E6%AF%94%E4%BA%9AZ20/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars.githubusercontent.com/u/96708948?v=4">
+      <meta itemprop="name" content="FullCombos">
+      <meta itemprop="description" content="SSS">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="全连击の碎碎念">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【补档】内核编译遇到的坑(1)之努比亚Z20
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-24 14:44:34" itemprop="dateCreated datePublished" datetime="2020-03-24T14:44:34+08:00">2020-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-17 19:53:07" itemprop="dateModified" datetime="2024-11-17T19:53:07+08:00">2024-11-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AOSP/" itemprop="url" rel="index"><span itemprop="name">AOSP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="注意：-该内容为补档，由于日期设置原因将会导致排序在下面"><a href="#注意：-该内容为补档，由于日期设置原因将会导致排序在下面" class="headerlink" title="注意： 该内容为补档，由于日期设置原因将会导致排序在下面"></a>注意： 该内容为补档，由于日期设置原因将会导致排序在下面</h1><p> 距离上次编译内核应该是安卓4.0时代了，最近因为一些特殊的需求，于是重新拾起了“内核编译”这档子事，这次的对象是 <font color=red size=4>   <del>牛逼亚</del> 努比亚Z20   </font></p>
+<span id="more"></span>
+
+<p>编译内核的源码来源于努比亚官方在Github上的开源 <a target="_blank" rel="noopener" href="https://github.com/ztemt/NX627J_P_kernel" title="点此进入">点此进入</a></p>
+<hr>
+<p>编译内核需要的工具：</p>
+<ul>
+<li><p>Linux&#x2F;GNU系统，这里推荐Ubuntu，毕竟是官方推荐</p>
+</li>
+<li><p>交叉编译链（Toolchain）</p>
+</li>
+<li><p>VMware Workstation（可选）</p>
+</li>
+</ul>
+<p>准备齐全后，开始部署编译环境。</p>
+<p>有些人用的是<code>build.sh</code> 这种一键式的脚本，但是如果你是个初学者，我<font color=red size=6>   强烈不建议   </font>初学者使用这种一劳永逸的一键式脚本，方便归方便，但是命令要是敲得少了，初学者很容易就会忘却命令该怎么打。所以在本次记录中，我用的是传统的终端命令法。</p>
+<hr>
+<p>因为太久没接触了，所以脑子里也对部署环境的步骤没什么印象，所以选择了向 <del>无能</del> 万能的百度求助。</p>
+<p>CSDN上的大部分教程都讲得不大清楚，唯一一篇讲的还算仔细的也已经是上古教程，但是有总比没有好，想着内核编译应该也没发生那么大的变化，于是便试着按照<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014418171/article/details/82659887">这篇教程</a>来配置了编译环境。</p>
+<p>值得一提的是这个教程有一个地方很有意思，就是这一段</p>
+<blockquote>
+<p>打开终端, 输入 sudo gedit &#x2F;etc&#x2F;profile 在末尾添加环境变量</p>
+</blockquote>
+<pre><code>export ANDROID_AARCH64=你下载的GCC编译器路径/aarch64-linux-android-4.9/bin/
+ 
+export ARCH=arm64
+
+export SUBARCH=arm64
+
+export PATH=$PATH:$ANDROID_AARCH64
+
+export CROSS_COMPILE=aarch64-linux-android-
+</code></pre>
+<p>这篇教程使用了修改配置文件的方法来配置环境，因为这个文件在每次开机的时候都会被加载。</p>
+<p>但是我还是建议新手使用控制台手动键入命令的方法来配置环境，熟能生巧。</p>
+<p>首先来到内核目录，这里拿努比亚Z20的内核来做示范。<br><img src="https://s1.ax1x.com/2020/03/24/8qDI4s.png" alt="内核目录"></p>
+<p>在此处右键打开终端，先键入<code>mkdir out</code>，用这个命令来创建一个out文件夹来存放编译好后的文件。</p>
+<p>然后，键入</p>
+<pre><code>make O=out ARCH=arm64 vendor/sm8150-NX627J-perf_defconfig
+</code></pre>
+<p>来加载预配置文件。这个文件具体叫什么可以在&#x2F;arch&#x2F;arm64&#x2F;configs&#x2F;目录里找到，对应自己的机型就好。</p>
+<p>接下来正式开始配置环境，在终端内依次键入：</p>
+<pre><code>export ARCH=arm64
+
+export SUBARCH=arm64
+
+export CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+
+cd out
+</code></pre>
+<p>这个时候你已经配置好环境并且进入了out文件夹，接下来就要开始编译了。</p>
+<p>输入<code>make O=out CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- -j8</code></p>
+<p>那个最后的-j+数字，你有几个逻辑线程就填什么数字吧。</p>
+<p>接下来，一般的内核应该就开始刷刷刷的显示一堆东西开始编译了，但是，这并没有发生，随着一堆英文列表的快速闪动，没过1分钟，编译报错了，而出错文件是<code>fault.o</code>，这名字还挺应景。</p>
+<p>回看教程，并没有错啊，环境也配置正确了，为什么报错了呢？</p>
+<p>至此，第一个坑出现了</p>
+<hr>
+<h2 id="第一个坑"><a href="#第一个坑" class="headerlink" title="第一个坑"></a>第一个坑</h2><p>在这个步骤上，我浪费了很多时间，期间还求助了<a target="_blank" rel="noopener" href="https://github.com/mxy218">muxiaoyu</a>的帮助，刚开始他也是建议更换GCC编译器的版本，但是这个方法并不凑效，在几经周折后，偶然在Devcheck里发现Z20的内核是用Clang编译的，于是尝试着修改配置，使用Clang进行编译。</p>
+<p><font color=red size=6>注意：</font>这里建议使用骁龙官（魔）方（改）的clang进行编译，因为据歪果网友所说，MSM4.14以后的内核必须使用官方clang进行编译</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8LkgDH.png"></p>
+<p>首先<code>make mrproper</code>来恢复编译环境为初始状态，<br>然后依次键入</p>
+<pre><code>make O=out ARCH=arm64 vendor/sm8150-NX627J-perf_defconfig
+
+export ARCH=arm64
+
+export SUBARCH=arm64
+
+export CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+
+export CC=[你的Clang地址]/bin/clang
+
+make O=out CC=[你的Clang地址]/bin/clang CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- -j8
+</code></pre>
+<p>这次没有卡在<code>fault.o</code>，十分顺畅地编译完了内核。但是你以为这就结束了吗？这只是第一个坑的结束，<font color=red size=6>第二个坑</font>的开始。。。</p>
+<hr>
+<h2 id="第二个坑"><a href="#第二个坑" class="headerlink" title="第二个坑"></a>第二个坑</h2><p>编译后应该会在<code>out/arch/arm64/boot</code>产生一个名字叫<code>image.gz-dtb</code>的文件，这个就是我们编译好的内核，按照常理来说，我们现在只需要直接把这个文件丢到Anykernel的卡刷包里去再刷入就好了，但是。。。。</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8q5KRU.png" alt="aww，man"></p>
+<h1 id="开-幕-雷-击"><a href="#开-幕-雷-击" class="headerlink" title="开 幕 雷 击"></a>开 幕 雷 击</h1><p>为什么呢？</p>
+<p>因为<del>努比亚牛逼！</del>努比亚官方并没有设置压缩参数，所以编译出来的文件就是未压缩状态，所以直接丢到anykernel里应该也是可以的。。。。。。。。。。吧？</p>
+<p>我抱着这样的想法把内核刷进了我的手机，然后。。。</p>
+<p><font color=blue size=6>我</font><font color=green size=6>在</font><font color=red size=6>Fastboot</font><font color=yellow size=6>里</font><font color=black size=6>玩</font><font color=orange size=6>的</font><font color=gray size=6>很</font><font color=red size=6>开</font><font color=blue size=6>心</font></p>
+<p>为什么呢？我百思不得其解，因为编译的过程明明已经顺利结束了，可是为什么还是无法启动呢？</p>
+<p>直到我发现<code>image</code>和<code>image-dtb</code>的文件大小一模一样。。。</p>
+<p>你们知道后面的-dtb是什么意思吗？意思就是包含了dtb的内核文件，dtb也叫device tree blob，这个device tree blob的网友解释是：</p>
+<blockquote>
+<p>dtb文件作用的描述是，使用dtb可以减少linux内核版本的数量。同一份linux 内核代码可以在多个板卡上运行，每个板卡可以使用自己的dtb文件。</p>
+<p>　　1，在linux内核启动过程中会解析dtb文件，根据dtb文件中设备列表进行加注各个外设的驱动模块。</p>
+</blockquote>
+<blockquote>
+<p>　　2，PC机在启动时会自动扫描外设，而在嵌入式中，linux内核启动过程中只是解析dtb文件，从而加载对应的模块。</p>
+</blockquote>
+<blockquote>
+<p>　　3，编译linux内核时必须选择某外设模块，并且dtb中包括该外设的信息。在linux内核启动过程中才能自动加载该模块。</p>
+</blockquote>
+<p>官方解释是：</p>
+<blockquote>
+<p>设备树 (DT) 是用于描述“不可发现”硬件的命名节点和属性的数据结构。操作系统（例如在 Android 中使用的 Linux 内核）会使用 DT 来支持 Android 设备使用的各种硬件配置。硬件供应商会提供自己的 DT 源文件，接下来 Linux 会将这些文件编译到引导加载程序使用的设备树 Blob (DTB) 文件中。</p>
+<p>设备树叠加层 (DTO) 可让主要的设备树 Blob (DTB) 叠加在设备树上。使用 DTO 的引导加载程序可以维护系统芯片 (SoC) DT，并动态叠加针对特定设备的 DT，从而向树中添加节点并对现有树中的属性进行更改。</p>
+</blockquote>
+<p>总结一句话就是，没有dtb的话，你的内核认不出手机是啥配置，于是就无法启动了。</p>
+<p><code>image</code>是内核文件，<code>image-dtb</code>就是附加了dtb的内核文件，这两个文件大小一样的话，说明了什么？</p>
+<p><font color=red size=6>这狗日的DTB没编译进内核啊啊啊！</font></p>
+<p>没有dtb能启动就怪了，但是现在问题来了，为什么官方内核没能自动编译dtb呢？</p>
+<p>键入</p>
+<p><code>make O=out CC=[你的Clang地址]/bin/clang CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- dtbs -j8 </code></p>
+<p>来手动编译dtb，结果发现报错，提示是找不到文件？？？</p>
+<p>于是手动来到编译前的dtb文件————dts的位置</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8qLaKf.png" alt="惊喜不惊喜，意外不意外？"></p>
+<p>这里摆了4个机型，分别是努比亚Z20，红魔3&#x2F;3s，那个NX627H可能是Z20的工程机。</p>
+<p>所以努比亚把多个机型的dts合并到一个内核源码里，其实也不错，这样子就不用多上传几份源码了，毕竟，这几个机型用的都是骁龙855&#x2F;855Plus。</p>
+<p>但，那我们该怎么编译Z20（NX627J）的DTB呢？</p>
+<p>通过翻阅<code>/arch/arm64/boot/dts/qcom</code>里的Makefile文件，在199行处得知努比亚定义了一个NUBIA_DTS_NAME来决定该编译哪一个机型的dtb文件。</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8qXdAg.png"></p>
+<p>于是，回到内核源码的根目录，打开终端，先<code>make clean</code>和<code>make mrproper</code>。</p>
+<p>然后教你们一个<font color=red size=6>牛逼的方法</font></p>
+<p>直接进&#x2F;arch&#x2F;arm64&#x2F;boot&#x2F;dts&#x2F;nubia&#x2F;NX627J文件夹，把里面的全部文件直接复制到&#x2F;arch&#x2F;arm64&#x2F;boot&#x2F;dts&#x2F;nubia文件夹里</p>
+<p>然后回内核源码根目录输入以下命令</p>
+<pre><code>make O=out ARCH=arm64 vendor/sm8150-NX627J-perf_defconfig
+
+export ARCH=arm64
+
+export SUBARCH=arm64
+
+export CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android-
+
+export CC=[你的Clang地址]/bin/clang
+
+make O=out CC=[你的Clang地址]/bin/clang CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- -j8
+</code></pre>
+<p>编译完后再输入</p>
+<pre><code>make O=out CC=[你的Clang地址]/bin/clang CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- dtbs -j8
+</code></pre>
+<p>然后，报错了。</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8LpUH0.jpg" alt="好气哦"></p>
+<p>报错的提示是，<code>没有用于创建”dtbo“的规则</code></p>
+<p>这，就是第三个坑</p>
+<hr>
+<h2 id="第三个坑"><a href="#第三个坑" class="headerlink" title="第三个坑"></a>第三个坑</h2><p>为什么呢？按理来说，官方内核是不应该出现这种情况的啊，这个问题困扰了我整整2天，后来在一次偶然的机会，在社区看到了<a target="_blank" rel="noopener" href="https://bbs.nubia.cn/forum.php/etc/forum.php?mod=viewthread&tid=2546466&page=1&authorid=7980751">这么一篇帖子</a></p>
+<p>里面有一段是这样的：</p>
+<blockquote>
+<p>补充内容 (2020-1-21 13:27):<br>没搞懂 为什么修复过后的DTS编译成DTBO会丢失__overlay__和frame字段，是DTC编译器的问题吗？</p>
+<p>补充内容 (2020-1-21 19:03):<br>原来公版的DTSI报错是少了个赋值。。。。。总算过了</p>
+<p>补充内容 (2020-1-22 17:56):<br>又不行了，，，，重选个版本的内核试试</p>
+<p>补充内容 (2020-1-23 16:35):<br>原来真的是DTC的锅 打了Patch升级了DTC 就好了。。。走了好多弯路 </p>
+</blockquote>
+<p>犹如醍醐灌顶。</p>
+<p>注释：DTC是用来把DTS编译成DTB的编译器，一般内核里都会自带</p>
+<p>马上去别的机型的内核里偷来了编译好的DTC，直接把整个文件夹放入&#x2F;out&#x2F;scripts&#x2F;dtc（文末我会提供这个东西），然后再次</p>
+<pre><code>make O=out CC=[你的Clang地址]/bin/clang CROSS_COMPILE=/home/user/aarch64-linux-android-4.9/bin/aarch64-linux-android- dtbs -j8
+</code></pre>
+<p>编译完毕。</p>
+<p>然后回去看你编译出来的<code>Image-dtb</code>，是不是变大了不少？</p>
+<p><font color=green size=6>吐槽：努比亚牛逼，自己开源的源码居然连自带的工具都是旧版，编译个毛啊！</font></p>
+<p>这个时候你是不是欣喜若狂，想着终于把DTB编译进内核了，终于可以启动了？</p>
+<p>没那么简单。这是第四个坑的开始。</p>
+<hr>
+<h2 id="第四个坑"><a href="#第四个坑" class="headerlink" title="第四个坑"></a>第四个坑</h2><p>我迫不及待的把<code>image-dtb</code>丢到了anykernel卡刷包里，打算大刷一场，结果：</p>
+<p><font color=blue size=6>我</font><font color=green size=6>在</font><font color=red size=6>努比亚LOGO</font><font color=yellow size=6>处</font><font color=black size=6>玩</font><font color=orange size=6>的</font><font color=gray size=6>很</font><font color=red size=6>开</font><font color=blue size=6>心</font></p>
+<p>为什么？？为什么？？？为什么？？？？</p>
+<p>编译出的内核刷进去还是开不了机</p>
+<p>难道，要在这里停下了吗。。。</p>
+<blockquote>
+<p>“不要停下来啊！” ————铁华团团长，奥尔加</p>
+</blockquote>
+<p>初步认为是anykernel版本的问题，于是尝试更换多个版本，均以卡在logo而告终。</p>
+<p>后来在一次偶然（怎么这么多偶然）的机会，我解包了官方的<code>boot.img</code>，发现里面的<code>zImage</code>和我的<code>image-dtb</code>大小相差无几，并且用十六进制编辑器打开后，里面的内容也惊人的相似，我突然有了个大胆的想法</p>
+<p>把<code>image-dtb</code>改名<code>为zImage</code>后丢到anykernel刷入手机。</p>
+<p>在等待了1分钟之后，手机，黑屏了，但是我发现事情没有那么简单，因为我开启了触摸反馈，虽然是黑屏，但是触摸屏幕是有反应的，就说明，开机成功了。</p>
+<p>等待了半分钟后，</p>
+<h1 id="熟悉的锁屏界面出现了"><a href="#熟悉的锁屏界面出现了" class="headerlink" title="熟悉的锁屏界面出现了"></a>熟悉的锁屏界面出现了</h1><p>成功刷入内核并且启动！！！！</p>
+<p>打开设置-关于手机，内核版本处看到了自己的用户名</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8LiMrj.jpg"></p>
+<p><font color=blue size=6>哈</font><font color=green size=6>哈</font><font color=red size=6>哈</font><font color=yellow size=6>哈</font><font color=black size=6>哈</font><font color=orange size=6>哈</font><font color=gray size=6>哈</font><font color=red size=6>哈</font><font color=blue size=6>哈</font></p>
+<p>high到变色。</p>
+<p>但是我马上意识到了不对劲。</p>
+<hr>
+<h2 id="超级大坑"><a href="#超级大坑" class="headerlink" title="超级大坑"></a>超级大坑</h2><p>我的声音呢？？我的WiFi呢？？？我的热点呢？？？？？</p>
+<p>我咋开游戏还闪退？？？？？</p>
+<p>WTF！？！？</p>
+<p>很明显，官方开源的内核并不完整。</p>
+<p>所以，</p>
+<p>我想对努比亚官方说：</p>
+<p><img src="https://s1.ax1x.com/2020/03/24/8LFky4.jpg" alt="我带你妈打"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%86%85%E6%A0%B8/" rel="tag"># 内核</a>
+              <a href="/tags/%E7%BC%96%E8%AF%91/" rel="tag"># 编译</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2024/11/17/%E4%B8%80%E6%AE%B5%E6%95%85%E4%BA%8B%E7%9A%84%E7%BB%93%E6%9D%9F%EF%BC%8C%E5%8F%A6%E4%B8%80%E6%AE%B5%E6%95%85%E4%BA%8B%E7%9A%84%E5%BC%80%E5%A7%8B/" rel="next" title="一段故事的结束，另一段故事的开始">
+      一段故事的结束，另一段故事的开始 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%EF%BC%9A-%E8%AF%A5%E5%86%85%E5%AE%B9%E4%B8%BA%E8%A1%A5%E6%A1%A3%EF%BC%8C%E7%94%B1%E4%BA%8E%E6%97%A5%E6%9C%9F%E8%AE%BE%E7%BD%AE%E5%8E%9F%E5%9B%A0%E5%B0%86%E4%BC%9A%E5%AF%BC%E8%87%B4%E6%8E%92%E5%BA%8F%E5%9C%A8%E4%B8%8B%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">注意： 该内容为补档，由于日期设置原因将会导致排序在下面</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%9D%91"><span class="nav-number">1.1.</span> <span class="nav-text">第一个坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E4%B8%AA%E5%9D%91"><span class="nav-number">1.2.</span> <span class="nav-text">第二个坑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80-%E5%B9%95-%E9%9B%B7-%E5%87%BB"><span class="nav-number">2.</span> <span class="nav-text">开 幕 雷 击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%9D%91"><span class="nav-number">2.1.</span> <span class="nav-text">第三个坑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E4%B8%AA%E5%9D%91"><span class="nav-number">2.2.</span> <span class="nav-text">第四个坑</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%86%9F%E6%82%89%E7%9A%84%E9%94%81%E5%B1%8F%E7%95%8C%E9%9D%A2%E5%87%BA%E7%8E%B0%E4%BA%86"><span class="nav-number">3.</span> <span class="nav-text">熟悉的锁屏界面出现了</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E7%BA%A7%E5%A4%A7%E5%9D%91"><span class="nav-number">3.1.</span> <span class="nav-text">超级大坑</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="FullCombos"
+      src="https://avatars.githubusercontent.com/u/96708948?v=4">
+  <p class="site-author-name" itemprop="name">FullCombos</p>
+  <div class="site-description" itemprop="description">SSS</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">FullCombos</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+    </div>
+</body>
+</html>
